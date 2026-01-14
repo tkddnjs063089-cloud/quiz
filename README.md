@@ -25,74 +25,108 @@
 
 [Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
 
-## Project setup
+# quiz
+
+간단한 NestJS 예제 프로젝트입니다.
+
+## 개요
+
+- 프레임워크: NestJS
+- 목적: 예제용 REST API 템플릿 및 CI/CD 설정 예시
+
+## 파일 구조(주요)
+
+- `src/` : 애플리케이션 소스
+- `Dockerfile`, `docker-compose.yml` : 컨테이너 빌드/실행 파일
+- `.github/workflows/cicd.yml` : GitHub Actions CI/CD 워크플로우
+
+## 요구사항
+
+- Node.js 18+ 권장
+- npm
+- Docker (컨테이너로 실행할 경우)
+
+## 설치 및 개발 실행
+
+1. 종속성 설치
 
 ```bash
-$ npm install
+npm install
 ```
 
-## Compile and run the project
+2. 개발 서버 실행
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm run start:dev
 ```
 
-## Run tests
+3. 빌드
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run build
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+4. 프로덕션 시작
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm run start:prod
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Docker 사용
 
-## Resources
+- 로컬에서 이미지 빌드 후 컨테이너 실행
 
-Check out a few resources that may come in handy when working with NestJS:
+```bash
+docker build -t quiz:latest .
+docker run -p 3000:3000 quiz:latest
+```
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+- 또는 `docker-compose.yml` 사용
 
-## Support
+```bash
+docker-compose up --build
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## 테스트 및 린트
 
-## Stay in touch
+- 린트
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```bash
+npm run lint
+```
 
-## License
+- 유닛 테스트
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```bash
+npm run test
+```
+
+- e2e 테스트
+
+```bash
+npm run test:e2e
+```
+
+## CI/CD (GitHub Actions & Railway)
+
+저장소의 `.github/workflows/cicd.yml` 파일에 따라 다음 순서로 동작합니다:
+
+1. `ci` job: 체크아웃 → 의존성 설치 → 린트 → 테스트
+2. `cd` job: `ci` 성공 후 Railway로 배포
+
+배포를 위해 GitHub 저장소에 Railway 토큰을 시크릿으로 추가해야 합니다.
+
+1. Railway에서 토큰 생성
+   - https://railway.app 에 로그인 → Account Settings → API Tokens → 토큰 생성
+2. GitHub 저장소 설정
+   - 저장소 → `Settings` → `Secrets and variables` → `Actions` → `New repository secret`
+   - Name: `RAILWAY_TOKEN`
+   - Value: Railway에서 복사한 토큰
+
+워크플로우에서는 `${{ secrets.RAILWAY_TOKEN }}`로 참조됩니다.
+
+## 참고
+
+- `package.json`의 주요 스크립트: `start`, `start:dev`, `build`, `lint`, `test`, `test:e2e`.
+
+문서를 더 확장하거나 예시 엔드포인트 문서를 추가하길 원하시면 알려주세요.
